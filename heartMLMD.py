@@ -10,6 +10,9 @@ from sklearn.ensemble import RandomForestClassifier
 import xgboost
 from sklearn.metrics import classification_report, roc_auc_score, roc_curve
 from sklearn.model_selection import learning_curve
+from sklearn.manifold import TSNE
+from imblearn.over_sampling import SMOTE
+
 
 def plotcorr(df, nrow, ncol, target, rsize, csize, colsList=None):
     fig = plt.figure(figsize=(rsize, csize))
@@ -55,4 +58,18 @@ def plotLc(model, x_train, x_test, y_train, y_test, test_size, cv):
     plt.plot(trainSizes, trainMean, label="train")
     plt.plot(trainSizes, testMean, label="cross val")
     plt.title(f"{model.__class__.__name__} Learning Curve")
+    plt.show()
+
+def tsne(X):
+    tsne = TSNE(n_components=2)
+    decArr = tsne.fit_transform(X)
+    return decArr
+
+def plotTsne(X, y_test, rs, cs):
+    decArr = tsne(X)
+    fig = plt.figure(figsize=(rs, cs))
+    plt.scatter(decArr[:,0], decArr[:,1], c=(y_test==0), label="non heart disease")
+    plt.scatter(decArr[:,0], decArr[:,1], c=(y_test==1), label="heart disease")
+    plt.legend()
+    plt.title("TSNE", size=20)
     plt.show()
